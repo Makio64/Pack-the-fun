@@ -203,7 +203,7 @@ class StartScene extends AScene
 		# @vignette.uniforms[ "offset" ].value += (average*.002-@vignette.uniforms[ "offset" ].value)*.45;
 		@focus.uniforms[ "waveFactor" ].value += (average*Constant.convexRatio-@focus.uniforms[ "waveFactor" ].value)*Constant.convexEase;
 		# @camera.position.z += (average*15-@camera.position.z)*.05;
-		@camera.fov += (45+average*2.8-@camera.fov)*.65;
+		# @camera.fov += (45+average*2.8-@camera.fov)*.65;
 		# console.log @camera.fov
 
 		# if average == 0 and @state != 0
