@@ -55,7 +55,7 @@ class Main
 		focus.uniforms[ "sampleDistance" ].value = 0.6;
 
 		fxaa = new THREE.ShaderPass( THREE.FXAAShader )
-		fxaa.uniforms[ "resolution" ].value.set(1 / (window.innerWidth / window.devicePixelRatio), 1 / (window.innerHeight / window.devicePixelRatio));
+		fxaa.uniforms["resolution"].value.set(1 / (window.innerWidth / 1), 1 / (window.innerHeight / 1));
 		# mirror = new THREE.ShaderPass( THREE.MirrorShader )
 		# mirror.uniforms[ "screenWidth" ].value = window.innerWidth;
 		# mirror.uniforms[ "screenHeight" ].value = window.innerHeight;
@@ -129,8 +129,7 @@ class Main
 			@camera.updateProjectionMatrix()
 			@focus.uniforms[ "screenWidth" ].value = window.innerWidth*window.devicePixelRatio;
 			@focus.uniforms[ "screenHeight" ].value = window.innerHeight*window.devicePixelRatio;
-			@fxaa.uniforms[ "resolution" ].value.set(1 / (window.innerWidth / window.devicePixelRatio), 1 / (window.innerHeight / window.devicePixelRatio));
-
+			@fxaa.uniforms["resolution"].value.set(1 / (window.innerWidth / 1), 1 / (window.innerHeight / 1));
 
 		return
 
