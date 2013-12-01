@@ -1,0 +1,112 @@
+// Macro
+transform()
+	-webkit-transform: arguments
+	-moz-transform: arguments
+	-o-transform: arguments
+	-ms-transform: arguments
+	transform: arguments
+transition()
+	-webkit-transition: arguments
+	-moz-transition: arguments
+	-o-transition: arguments
+	-ms-transition: arguments
+	transition: arguments
+transitionDelay()
+	-webkit-transition-delay: arguments
+	-moz-transition-delay: arguments
+	-o-transition-delay: arguments
+	-ms-transition-delay: arguments
+	transition-delay: arguments
+transformOrigin()
+	-webkit-transform-origin: arguments
+	-moz-transform-origin: arguments
+	-o-transform-origin: arguments
+	-ms-transform-origin: arguments
+	transform-origin: arguments
+
+// Global
+body
+	font-family: 'Quicksand', sans-serif;
+	font-weight: normal
+	cursor: pointer
+
+#loading2
+	position:absolute
+	bottom 0
+	left 50%
+	width 18px
+	height 100%
+	padding 30px
+	margin-left -20px
+	background rgba(200,0,0,.8)
+	transition(all 0.3s ease-out)
+	overflow hidden
+
+	&.removed
+		opacity 0
+		height 0
+
+#loading 
+	
+	position:absolute
+	top 50%
+	right 0
+	width 100%
+	height 18px
+	padding 30px
+	margin-top -20px
+	background rgba(200,0,0,.8)
+	text-align center
+	color #FFF
+	transition(all 0.3s ease-out)
+	overflow hidden
+
+	.t1
+		transition(all .4s ease-out)
+		margin auto
+		height 18px
+		width 200px
+		padding-left 100px
+		text-align center
+		&.removed
+			opacity 0
+			height 0
+	.t2
+		text-align center
+		width 200px
+		padding-left 100px
+		transition(all .4s ease-out)
+		margin auto
+		opacity 0
+		height 0
+		&.activate
+			opacity 1
+			height 18px
+
+	&.removed
+		opacity 0
+		width 0
+		// margin-top -30px
+		// transform(scale(1.2))
+
+#slogan
+	position:absolute
+	top 60px
+	width 100%
+	height 0px
+	padding 0px
+	overflow hidden
+	background rgba(0,0,0,.3)
+	text-align center
+	color #FFF
+	transition(all 1.2s ease-out)
+	transitionDelay(0.8s)
+	opacity 0
+
+	&.activate
+		top 0px
+		opacity 1
+		height 20px
+		padding 20px
+
+
