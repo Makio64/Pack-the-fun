@@ -15,6 +15,8 @@ class StartScene extends AScene
 		@vignette = main.vignette
 		@vignette2 = main.vignette2
 
+		$("body").css("cursor","pointer")
+
 		@camera.position.y = 150
 		@camera.position.x = 0
 		@camera.lookAt(@scene.position)
@@ -110,6 +112,7 @@ class StartScene extends AScene
 		$("#slogan").addClass("activate")
 		fx = new Snd("./sfx/clear.mp3")
 		fx.play()
+		$("body").css("cursor","auto")
 		return
 
 	mouseDown:(e)=>

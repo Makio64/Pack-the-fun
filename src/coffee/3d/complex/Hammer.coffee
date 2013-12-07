@@ -1,7 +1,7 @@
 class Hammer extends THREE.Object3D
 
 	constructor:(@scene)->
-		@limit = 150
+		@limit = 140
 		@state = "x"
 
 		THREE.Object3D.call(@)
@@ -39,7 +39,8 @@ class Hammer extends THREE.Object3D
 	hit:(callback)->
 		if @blocked
 			return
-
+		if @state == "x"
+			@limit -= 10
 		@fx = new Snd("./sfx/machine.mp3")
 		@fx.play()
 
@@ -64,10 +65,10 @@ class Hammer extends THREE.Object3D
 
 			when "z"
 				@state = "x"
-				@limit -= 10
+				@limit -= 30
 				TweenLite.to(@rotation,.4,{y:0})
 	
-		if @limit <= 120
+		if @limit <= 100
 			@scene.packGift()
 			TweenLite.to(@material,.6,{delay:.1,opacity:0})
 			TweenLite.to(@left.position,.7,{x : -@limit-80})

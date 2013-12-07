@@ -30,6 +30,9 @@ class SndFX
 		else if window.webkitAudioContext
 			@webAudio = true
 			@context = new webkitAudioContext()
+		else if window.mozAudioContext
+			@webAudio = true
+			@context = new mozAudioContext()
 		else
 			@webAudio = false
 
@@ -61,7 +64,7 @@ class SndFX
 		return
 
 
-	volume: (vol) ->
+	volume: (vol) =>
 		vol = parseFloat(vol)
 		if (vol && vol >= 0 && vol <= 1)
 			@_volume = vol
@@ -76,7 +79,7 @@ class SndFX
 		else return @_volume
 
 
-	load:(@urls, callback=null)->
+	load:(@urls, callback=null)=>
 
 		for i in [0...urls.length] by 1
 			urls[i] = @replaceSuffix(urls[i])
@@ -93,7 +96,7 @@ class SndFX
 				@loadAudio(urls[i])
 		return
 
-	replaceSuffix:(url)->
+	replaceSuffix:(url)=>
 		if @codecs.mp3
 			return url
 		
@@ -110,13 +113,13 @@ class SndFX
 		
 
 
-	loadBuffer:(url, index)->
+	loadBuffer:(url, index)=>
 		request = new XMLHttpRequest();
 		request.open("GET", url, true);
 		request.responseType = "arraybuffer";
 		loader = @;
 
-		request.onload = ()->
+		request.onload = ()=>
 			loader.context.decodeAudioData(
 				request.response
 				(buffer)=>
@@ -136,14 +139,14 @@ class SndFX
 					console.error('decodeAudioData error', error)
 			)
 
-		request.onerror = ()->
+		request.onerror = ()=>
 			alert('BufferLoader: XHR error')
 
 		request.send()
 		return
 
 
-	loadAudio:(url)->
+	loadAudio:(url)=>
 		loader = @;
 
 		sound = new Audio()
@@ -157,7 +160,7 @@ class SndFX
 		return
 
 
-	getByID:(id)->
+	getByID:(id)=>
 		for snd in @sounds
 			if snd.id == id
 				return snd
@@ -165,20 +168,20 @@ class SndFX
 		return null
 
 
-	createGain:()->
+	createGain:()=>
 		if @context.createGain
 			return @context.createGain()
 		else
 			return @context.createGainNode()
 
 
-	createPanner:()->
+	createPanner:()=>
 		if @context.createPanner
 			return @context.createPanner()
 		else
 			return @context.createPannerNode()
 
-	createAnalyser:()->
+	createAnalyser:()=>
 		if @context.createAnalyser
 			analyser = @context.createAnalyser()
 		else
@@ -187,22 +190,25 @@ class SndFX
 		analyser.fftSize = 2048;
 		return analyser
 
-	createJavaScript:()->
+	createJavaScript:()=>
 		if @context.createJavaScript
 			jsNode = @context.createJavaScript(2048, 1, 1)
-		else
+		else if @context.createJavaScriptNode
 			jsNode = @context.createJavaScriptNode(2048, 1, 1)
+		else if @context.createScriptProcessor
+			jsNode = @context.createScriptProcessor(2048, 1, 1)
+
 		jsNode.connect(@fxGain)
 		return jsNode
 
-	remove:(snd)->
+	remove:(snd)=>
 		idx = @sounds.indexOf(snd)
 		if idx == -1
 			return
 		@sounds.splice(idx,1)
 		
 
-	update:(dt)->
+	update:(dt)=>
 		for snd in @sounds
 			snd.update(dt)
 		

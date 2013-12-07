@@ -335,7 +335,8 @@ Snd = (function() {
 
 })();
 
-var SndFX;
+var SndFX,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 SndFX = (function() {
   SndFX.prototype.cache = {};
@@ -365,6 +366,18 @@ SndFX = (function() {
   SndFX.prototype.webAudio = false;
 
   function SndFX() {
+    this.update = __bind(this.update, this);
+    this.remove = __bind(this.remove, this);
+    this.createJavaScript = __bind(this.createJavaScript, this);
+    this.createAnalyser = __bind(this.createAnalyser, this);
+    this.createPanner = __bind(this.createPanner, this);
+    this.createGain = __bind(this.createGain, this);
+    this.getByID = __bind(this.getByID, this);
+    this.loadAudio = __bind(this.loadAudio, this);
+    this.loadBuffer = __bind(this.loadBuffer, this);
+    this.replaceSuffix = __bind(this.replaceSuffix, this);
+    this.load = __bind(this.load, this);
+    this.volume = __bind(this.volume, this);
     var audioTest;
     if (SndFX.instance) {
       throw new Error("You can't create an instance of SndFX");
@@ -375,6 +388,9 @@ SndFX = (function() {
     } else if (window.webkitAudioContext) {
       this.webAudio = true;
       this.context = new webkitAudioContext();
+    } else if (window.mozAudioContext) {
+      this.webAudio = true;
+      this.context = new mozAudioContext();
     } else {
       this.webAudio = false;
     }
@@ -467,13 +483,13 @@ SndFX = (function() {
   };
 
   SndFX.prototype.loadBuffer = function(url, index) {
-    var loader, request;
+    var loader, request,
+      _this = this;
     request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.responseType = "arraybuffer";
     loader = this;
     request.onload = function() {
-      var _this = this;
       return loader.context.decodeAudioData(request.response, function(buffer) {
         if (!buffer) {
           alert('error decoding file data: ' + url);
@@ -552,8 +568,10 @@ SndFX = (function() {
     var jsNode;
     if (this.context.createJavaScript) {
       jsNode = this.context.createJavaScript(2048, 1, 1);
-    } else {
+    } else if (this.context.createJavaScriptNode) {
       jsNode = this.context.createJavaScriptNode(2048, 1, 1);
+    } else if (this.context.createScriptProcessor) {
+      jsNode = this.context.createScriptProcessor(2048, 1, 1);
     }
     jsNode.connect(this.fxGain);
     return jsNode;
@@ -765,6 +783,7 @@ StartScene = (function(_super) {
     this.focus = main.focus;
     this.vignette = main.vignette;
     this.vignette2 = main.vignette2;
+    $("body").css("cursor", "pointer");
     this.camera.position.y = 150;
     this.camera.position.x = 0;
     this.camera.lookAt(this.scene.position);
@@ -844,6 +863,7 @@ StartScene = (function(_super) {
     $("#slogan").addClass("activate");
     fx = new Snd("./sfx/clear.mp3");
     fx.play();
+    $("body").css("cursor", "auto");
   };
 
   StartScene.prototype.mouseDown = function(e) {
@@ -1346,7 +1366,7 @@ Hammer = (function(_super) {
     var geometry, geometry2, m;
     this.scene = scene;
     this.unlock = __bind(this.unlock, this);
-    this.limit = 150;
+    this.limit = 140;
     this.state = "x";
     THREE.Object3D.call(this);
     geometry = new THREE.CubeGeometry(180, 60, 60, 1, 1, 1);
@@ -1394,6 +1414,9 @@ Hammer = (function(_super) {
     if (this.blocked) {
       return;
     }
+    if (this.state === "x") {
+      this.limit -= 10;
+    }
     this.fx = new Snd("./sfx/machine.mp3");
     this.fx.play();
     this.blocked = true;
@@ -1436,12 +1459,12 @@ Hammer = (function(_super) {
         break;
       case "z":
         this.state = "x";
-        this.limit -= 10;
+        this.limit -= 30;
         TweenLite.to(this.rotation, .4, {
           y: 0
         });
     }
-    if (this.limit <= 120) {
+    if (this.limit <= 100) {
       this.scene.packGift();
       TweenLite.to(this.material, .6, {
         delay: .1,
